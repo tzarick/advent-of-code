@@ -39,7 +39,7 @@ export const solution = (wireRoutes: string): result => {
   /* Part 1 */
   const [wireRoute1, wireRoute2] = parseRoutes(wireRoutes);
 
-  // set up the wire panel grid space
+  // set up the wire panel grid space - this is v memory intensive. Not the best... I think an alternative would be to use a "conceptual grid" instead of actually initializing one. Or represent each line segment for each route with [start coord, end coord] and look for any collisions with segments of the other route (not keeping any large central representation of the grid space)
   let grid = initGrid(wireRoute1, wireRoute2);
 
   const gridDimensions = [grid.length, grid[0].length];
@@ -196,7 +196,8 @@ const plotRoute = (
       for (let i = 0; i < dist; i++) {
         grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] =
           grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] &&
-          grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !== Marker.Empty &&
+          grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !==
+            Marker.Empty &&
           grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !== marker
             ? Marker.Intersection
             : marker; // if we see something other than Empty (0) or our own marker, mark an intersection
@@ -207,7 +208,8 @@ const plotRoute = (
       for (let i = 0; i < dist; i++) {
         grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] =
           grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] &&
-          grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !== Marker.Empty &&
+          grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !==
+            Marker.Empty &&
           grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !== marker
             ? Marker.Intersection
             : marker; // if we see something other than Empty (0) or our own marker, mark an intersection
