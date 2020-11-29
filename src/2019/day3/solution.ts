@@ -41,6 +41,7 @@ export const solution = (wireRoutes: string): result => {
 
   // set up the wire panel grid space
   let grid = initGrid(wireRoute1, wireRoute2);
+
   const gridDimensions = [grid.length, grid[0].length];
   const centerPoint: [x: number, y: number] = [
     Math.floor(gridDimensions[0] / 2),
@@ -195,10 +196,10 @@ const plotRoute = (
       for (let i = 0; i < dist; i++) {
         grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] =
           grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] &&
-          grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !== 0 &&
+          grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !== Marker.Empty &&
           grid[vertex_x][vertex_y + 1 * multiplier + i * multiplier] !== marker
             ? Marker.Intersection
-            : marker; // if we see something other than 0 or our own marker, mark an intersection
+            : marker; // if we see something other than Empty (0) or our own marker, mark an intersection
       }
       // reassign vertex to the new endpoint
       vertex = [vertex_x, vertex_y + dist * multiplier];
@@ -206,10 +207,10 @@ const plotRoute = (
       for (let i = 0; i < dist; i++) {
         grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] =
           grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] &&
-          grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !== 0 &&
+          grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !== Marker.Empty &&
           grid[vertex_x + 1 * multiplier + i * multiplier][vertex_y] !== marker
             ? Marker.Intersection
-            : marker; // if we see something other than 0 or our own marker, mark an intersection
+            : marker; // if we see something other than Empty (0) or our own marker, mark an intersection
       }
       // reassign vertex to the new endpoint
       vertex = [vertex_x + dist * multiplier, vertex_y];
