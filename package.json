@@ -4,7 +4,7 @@
   "description": "advent of code solutions",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -c -r ts-node/register src/**/day3/*.spec.ts"
+    "test": "mocha -c -r ts-node/register src/**/2020/day1/*.spec.ts"
   },
   "author": "",
   "license": "ISC",
