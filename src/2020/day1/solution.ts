@@ -10,8 +10,8 @@ export const solution = (inputReport: string): result => {
   /* Part 1 */
   const entries = parseInput(inputReport);
   // const solution1 = initialSolution1(entries);
-  // const solution1 = betterSolution1(entries);
-  const solution1 = bettererSolution1(entries);
+  const solution1 = betterSolution1(entries);
+  // const solution1 = bettererSolution1(entries);
 
   /* Part 2 */
 
@@ -60,13 +60,13 @@ const betterSolution1 = (entries: number[]): number => {
   const sortedEntries = entries.sort((a, b) => a - b); // ascending
 
   while (left < right && solution === -1) {
-    let sum = entries[left] + entries[right];
+    let sum = sortedEntries[left] + sortedEntries[right];
     if (sum > 2020) {
       right--;
     } else if (sum < 2020) {
       left++;
     } else {
-      solution = entries[left] * entries[right];
+      solution = sortedEntries[left] * sortedEntries[right];
     }
   }
 
@@ -79,7 +79,7 @@ const bettererSolution1 = (entries: number[]): number => {
   let map = new Map<number, number>(); // (value, index)
   for (let i = 0; i < entries.length && solution === -1; i++) {
     const matchIndex = map.get(2020 - entries[i]);
-    // if there exists a value in the map that satisfies our equation
+    // if there exists a value in the map that satisfies our equation, choose it, otherwise add it
     if (matchIndex !== undefined) {
       solution = entries[i] * entries[matchIndex];
     } else {
