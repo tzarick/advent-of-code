@@ -10,8 +10,8 @@ export const solution = (inputReport: string): result => {
   /* Part 1 */
   const entries = parseInput(inputReport);
   // const solution1 = initialSolution1(entries);
-  const solution1 = betterSolution1(entries);
-  // const solution1 = bettererSolution1(entries);
+  // const solution1 = betterSolution1(entries);
+  const solution1 = bettererSolution1(entries);
 
   /* Part 2 */
 
