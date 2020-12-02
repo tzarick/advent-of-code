@@ -1,7 +1,7 @@
-type result = {
+interface result {
   part1: number;
   part2: number;
-};
+}
 
 interface PasswordInput {
   requirements: {
