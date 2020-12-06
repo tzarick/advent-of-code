@@ -9,7 +9,7 @@ interface BoardingPass {
   seatId: number;
 }
 /* Notes:
- *  Row is 0 - 127 -> represented by an 8 bit number where F=0 and B=1
+ *  Row is 0 - 127 -> represented by an 7 bit number where F=0 and B=1
  *  Column is 0 - 7 -> represented by a 3 bit number where L=0 and R=1
  */
 export const solution = (inputList: string): result => {
