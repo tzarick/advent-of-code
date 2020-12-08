@@ -24,7 +24,7 @@ export const solution = (inputList: string): result => {
   const bagIndex = parseInputIntoMap(inputList);
 
   let bagsContainingShinyGold = 0;
-  let containsMemo: Memo<boolean> = {}; // momoization - cache already evaluated recursive calls
+  let containsMemo: Memo<boolean> = {}; // memoization - cache already evaluated recursive calls
   bagIndex.forEach((nestedBags, bagType, map) => {
     if (containsShinyGold(bagType, nestedBags, map, containsMemo)) {
       bagsContainingShinyGold++;
@@ -32,7 +32,7 @@ export const solution = (inputList: string): result => {
   });
 
   /* Part 2 */
-  let countMemo: Memo<number> = {}; // momoization - cache already evaluated recursive calls
+  let countMemo: Memo<number> = {}; // memoization - cache already evaluated recursive calls
   const bagsInShinyGold = nestedBagCount(
     'shiny gold',
     bagIndex.get('shiny gold') as NestedBag[],
