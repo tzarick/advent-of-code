@@ -10,22 +10,38 @@ interface NestedBag {
   count: number;
 }
 
+// Memo cache for memoization in recursive calls - bool for part1, number for part2
+interface Memo<T> {
+  [key: string]: T;
+}
+
+// counters to track memo usage just to see how effective caching is in this scenario
+let memo_hits_1 = 0;
+let memo_hits_2 = 0;
+
 export const solution = (inputList: string): result => {
   /* Part 1 */
   const bagIndex = parseInputIntoMap(inputList);
 
   let bagsContainingShinyGold = 0;
+  let containsMemo: Memo<boolean> = {}; // momoization - cache already evaluated recursive calls
   bagIndex.forEach((nestedBags, bagType, map) => {
-    if (containsShinyGold(nestedBags, map)) {
+    if (containsShinyGold(bagType, nestedBags, map, containsMemo)) {
       bagsContainingShinyGold++;
     }
   });
 
   /* Part 2 */
+  let countMemo: Memo<number> = {}; // momoization - cache already evaluated recursive calls
   const bagsInShinyGold = nestedBagCount(
+    'shiny gold',
     bagIndex.get('shiny gold') as NestedBag[],
-    bagIndex
+    bagIndex,
+    countMemo
   );
+
+  console.log(`Memo cache hits Part 1: ${memo_hits_1}`);
+  console.log(`Memo cache hits Part 2: ${memo_hits_2}`);
 
   return {
     part1: bagsContainingShinyGold,
@@ -67,8 +83,10 @@ const parseInputIntoMap = (inputString: string): Map<BagType, NestedBag[]> => {
 };
 
 const containsShinyGold = (
+  bagType: BagType,
   nestedBags: NestedBag[],
-  bagMap: Map<BagType, NestedBag[]>
+  bagMap: Map<BagType, NestedBag[]>,
+  memo: Memo<boolean>
 ): boolean => {
   let bagContainsShinyGold = false;
 
@@ -76,13 +94,20 @@ const containsShinyGold = (
   if (!(nestedBags.length === 1 && !nestedBags[0].color)) {
     if (nestedBags.findIndex((bag) => bag.color === 'shiny gold') > -1) {
       bagContainsShinyGold = true;
+    } else if (bagType && bagType in memo) {
+      bagContainsShinyGold = memo[bagType];
+      memo_hits_1++;
     } else {
       for (let i = 0; i < nestedBags.length && !bagContainsShinyGold; i++) {
         bagContainsShinyGold = containsShinyGold(
+          nestedBags[i].color,
           bagMap.get(nestedBags[i].color) as NestedBag[],
-          bagMap
+          bagMap,
+          memo
         );
       }
+
+      if (bagType) memo[bagType] = bagContainsShinyGold;
     }
   }
 
@@ -90,19 +115,31 @@ const containsShinyGold = (
 };
 
 const nestedBagCount = (
+  bagType: BagType,
   nestedBags: NestedBag[],
-  bagMap: Map<BagType, NestedBag[]>
+  bagMap: Map<BagType, NestedBag[]>,
+  memo: Memo<number>
 ): number => {
   let bagCount = 0;
 
   // base case is when there is only 1 nested bag which has color = null, otherwise proceed
   if (!(nestedBags.length === 1 && !nestedBags[0].color)) {
-    for (let i = 0; i < nestedBags.length; i++) {
-      const childColor = nestedBags[i].color;
-      const childBags = bagMap.get(childColor);
-      bagCount +=
-        nestedBags[i].count +
-        nestedBags[i].count * nestedBagCount(childBags as NestedBag[], bagMap);
+    // look in cache first
+    if (bagType && bagType in memo) {
+      bagCount = memo[bagType];
+      memo_hits_2++;
+    } else {
+      for (let i = 0; i < nestedBags.length; i++) {
+        const childColor = nestedBags[i].color;
+        const childBags = bagMap.get(childColor);
+
+        bagCount +=
+          nestedBags[i].count +
+          nestedBags[i].count *
+            nestedBagCount(childColor, childBags as NestedBag[], bagMap, memo);
+      }
+
+      if (bagType) memo[bagType] = bagCount;
     }
   }
 

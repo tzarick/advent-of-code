@@ -5,5 +5,6 @@ import { readInput } from '../../utils';
 const input = readInput('input.txt');
 
 /* Results */
-console.log(`Part 1 Solution: ${solution(input).part1}`);
-console.log(`Part 2 Solution: ${solution(input).part2}`);
+const result = solution(input);
+console.log(`Part 1 Solution: ${result.part1}`);
+console.log(`Part 2 Solution: ${result.part2}`);
