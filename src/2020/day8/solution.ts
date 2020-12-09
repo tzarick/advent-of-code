@@ -59,7 +59,7 @@ export const solution = (inputProgram: string): result => {
     );
 
     [instructPointer, __] = swapAndContinueExecutingInstructionSet(
-      swapIndex,
+      swapIndex, // continue execution from the furthest out point that we know doesn't cause an inf loop, rather than starting from the bottom
       instructions,
       swapIndex
     );
