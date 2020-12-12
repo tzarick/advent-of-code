@@ -26,7 +26,7 @@ export const solution = (adapterRatings: string): result => {
       if (i === distances.length - 1 && contiguousOnesCount > 1) {
         disposableIslands_ContiguousOnes.push(contiguousOnesCount);
       }
-    } else if (distances[i] === 3 || i === distances.length - 1) {
+    } else if (distances[i] === 3) {
       if (contiguousOnesCount > 1) {
         disposableIslands_ContiguousOnes.push(contiguousOnesCount);
       }
