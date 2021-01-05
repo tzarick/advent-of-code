@@ -1,5 +1,3 @@
-import _, { initial } from 'lodash';
-
 type result = {
   part1: number;
   part2: number;
@@ -14,19 +12,7 @@ export const solution = (inputReport: string): result => {
   const solution1 = bettererSolution1(entries);
 
   /* Part 2 */
-
-  // for all nested loops, start searching at the next highest index from the parent loop index, we've already scanned all the lower ones
-
-  let solution2 = -1;
-  for (let i = 0; i < entries.length; i++) {
-    for (let j = i + 1; j < entries.length; j++) {
-      for (let k = j + 1; k < entries.length; k++) {
-        if (entries[i] + entries[j] + entries[k] === 2020) {
-          solution2 = entries[i] * entries[j] * entries[k];
-        }
-      }
-    }
-  }
+  const solution2 = betterSolution2(entries);
 
   return {
     part1: solution1,
@@ -84,6 +70,47 @@ const bettererSolution1 = (entries: number[]): number => {
       solution = entries[i] * entries[matchIndex];
     } else {
       map.set(entries[i], i);
+    }
+  }
+
+  return solution;
+};
+
+const initialSolution2 = (entries: number[]): number => {
+  // for all nested loops, start searching at the next highest index from the parent loop index, we've already scanned all the lower ones
+  let solution2 = -1;
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      for (let k = j + 1; k < entries.length; k++) {
+        if (entries[i] + entries[j] + entries[k] === 2020) {
+          solution2 = entries[i] * entries[j] * entries[k];
+        }
+      }
+    }
+  }
+
+  return solution2;
+};
+
+const betterSolution2 = (entries: number[]): number => {
+  let solution = -1;
+
+  for (let i = 0; i < entries.length && solution < 0; i++) {
+    const twoSumTarget = 2020 - entries[i];
+    // check if there is a 2sum solution to this new target
+    let twoSumSolution = -1;
+    let map = new Map<number, number>(); // value, index
+    for (let j = 0; j < entries.length && twoSumSolution < 0; j++) {
+      const matchIndex = map.get(twoSumTarget - entries[j]);
+      if (matchIndex !== undefined && j !== i) {
+        twoSumSolution = entries[j] * entries[matchIndex];
+      } else {
+        map.set(entries[j], j);
+      }
+    }
+
+    if (twoSumSolution > 0) {
+      solution = entries[i] * twoSumSolution;
     }
   }
 
