@@ -13,6 +13,7 @@ export const solution = (inputReport: string): result => {
 
   /* Part 2 */
   const solution2 = betterSolution2(entries);
+  // const solution2 = anotherSolution2(entries);
 
   return {
     part1: solution1,
@@ -111,6 +112,31 @@ const betterSolution2 = (entries: number[]): number => {
 
     if (twoSumSolution > 0) {
       solution = entries[i] * twoSumSolution;
+    }
+  }
+
+  return solution;
+};
+
+const anotherSolution2 = (entries: number[]): number => {
+  // two pointer approach on a sorted array
+  const sorted = entries.sort((a, b) => a - b);
+  let solution = -1;
+
+  for (let i = 0; i < sorted.length && solution < 0; i++) {
+    const twoSumTarget = 2020 - sorted[i];
+    // left and right move in toward each other
+    let left = i + 1; // left is next element after current element
+    let right = sorted.length - 1; // right is last element in list
+    while (left < right && solution < 0) {
+      const sum = sorted[left] + sorted[right];
+      if (sum > twoSumTarget) {
+        right--;
+      } else if (sum < twoSumTarget) {
+        left++;
+      } else {
+        solution = sorted[left] * sorted[right] * sorted[i];
+      }
     }
   }
 
