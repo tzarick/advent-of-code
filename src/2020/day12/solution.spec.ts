@@ -13,6 +13,15 @@ R90
 F11`,
     expected: 25,
   },
+  {
+    part: 2,
+    input: `F10
+N3
+F7
+R90
+F11`,
+    expected: 286,
+  },
 ];
 
 describe('Solution Test Cases - Day 12', () => {

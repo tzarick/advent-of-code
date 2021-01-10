@@ -33,13 +33,11 @@ interface Command {
 export const solution = (directionsRaw: string): result => {
   /* Part 1 */
   const directions = parseInput(directionsRaw);
-  // console.log(directions);
   let coords: [number, number] = [0, 0]; // x, y
   let heading: Direction = Direction.East;
 
   directions.forEach((command) => {
     heading = executeCommand(command, coords, heading);
-    // console.log(coords);
   });
 
   const manhattanDist = Math.abs(coords[0]) + Math.abs(coords[1]);
@@ -51,9 +49,11 @@ export const solution = (directionsRaw: string): result => {
     waypoint = executeCommand_waypoint(command, coords, waypoint, heading);
   });
 
+  const manhattanDist2 = Math.abs(coords[0]) + Math.abs(coords[1]);
+
   return {
     part1: manhattanDist,
-    part2: 0,
+    part2: manhattanDist2,
   };
 };
 
@@ -117,6 +117,7 @@ const executeCommand = (
     ) {
       coords[1] += command.value; // y axis
     } else {
+      // forward
       const multiplier = heading < 2 ? 1 : -1;
       const axis = heading % 2 === 0 ? 0 : 1;
       coords[axis] += command.value * multiplier;
@@ -132,10 +133,9 @@ const executeCommand_waypoint = (
   waypoint: [number, number],
   heading: Direction
 ): [number, number] => {
-  let newHeading = null;
+  // let newHeading = null;
   if (command.action === Action.Turn) {
-    newHeading = mod(heading + command.value, 4) as Direction; // rollover at South
-    waypoint = calculateNewWaypoint(waypoint, heading, newHeading);
+    waypoint = calculateNewWaypoint(waypoint, command.value * 90);
   } else {
     if (
       command.direction === Direction.East ||
@@ -148,13 +148,14 @@ const executeCommand_waypoint = (
     ) {
       waypoint[1] += command.value; // y axis
     } else {
-      const multiplier = heading < 2 ? 1 : -1;
-      const axis = heading % 2 === 0 ? 0 : 1;
-      coords[axis] += command.value * multiplier;
+      // forward
+
+      coords[0] += waypoint[0] * command.value;
+      coords[1] += waypoint[1] * command.value;
     }
   }
 
-  return [0, 0];
+  return waypoint;
 };
 
 function mod(n: number, m: number): number {
@@ -163,8 +164,23 @@ function mod(n: number, m: number): number {
 
 const calculateNewWaypoint = (
   waypoint: [number, number],
-  currentQuadrant: Direction,
-  newQuadrant: Direction
+  degrees: number
 ): [number, number] => {
-  return [0, 0];
+  // rotate a point around the origin by theta:
+  // x1 = x0*cos(theta) - y0*sin(theta)
+  // y1 = x0*sin(theta) + y0*cos(theta)
+  // console.log(`rotate degrees: ${degrees}`);
+  return [
+    Math.round(
+      waypoint[0] * Math.cos(toRadians(degrees)) -
+        waypoint[1] * Math.sin(toRadians(degrees))
+    ),
+    Math.round(
+      waypoint[0] * Math.sin(toRadians(degrees)) +
+        waypoint[1] * Math.cos(toRadians(degrees))
+    ),
+  ];
+};
+const toRadians = (angle: number): number => {
+  return angle * (Math.PI / 180);
 };
