@@ -14,37 +14,37 @@ const testCases = [
     part: 2,
     input: `939
 7,13,x,x,59,x,31,19`,
-    expected: 1068781,
+    expected: 1068781n, // bigint literal
   },
   {
     part: 2,
     input: `939
 17,x,13,19`,
-    expected: 3417,
+    expected: 3417n,
   },
   {
     part: 2,
     input: `939
 67,7,59,61`,
-    expected: 754018,
+    expected: 754018n,
   },
   {
     part: 2,
     input: `939
 67,x,7,59,61`,
-    expected: 779210,
+    expected: 779210n,
   },
   {
     part: 2,
     input: `939
 67,7,x,59,61`,
-    expected: 1261476,
+    expected: 1261476n,
   },
   {
     part: 2,
     input: `939
 1789,37,47,1889`,
-    expected: 1202161486,
+    expected: 1202161486n,
   },
 ];
 

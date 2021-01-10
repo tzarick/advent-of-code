@@ -1,6 +1,6 @@
 interface result {
   part1: number;
-  part2: number;
+  part2: BigInt;
 }
 
 // Sequential Bus - for part 2
@@ -19,13 +19,11 @@ export const solution = (input: string): result => {
   /* Part 2 */
   // using Chinese Remainder Theorem to find an x when we know values and remainders
   const busIds_2 = parseInput_part2(input);
-  const offsets = busIds_2.map((item) => item.offset); // mod the offset by the number so that we get the smallest possible offset/remainder to work with (this is important only for the actual problem input, not test cases, because the offset may be bigger than the id number itself -> ex. 20 mod 17 => 3 mod 17)
+  const offsets = busIds_2.map((item) => item.offset % item.id); // mod the offset by the number so that we get the smallest possible offset/remainder to work with (this is important only for the actual problem input, not test cases, because the offset may be bigger than the id number itself -> ex. 20 mod 17 => 3 mod 17)
   const ids = busIds_2.map((item) => item.id);
-  console.log(ids);
-  console.log(offsets);
-  const [smallestCrt, newModulo] = chineseRemainderTheorem(ids, offsets);
 
-  const targetTimestamp = newModulo - smallestCrt;
+  const [smallestCrt, newModulo] = chineseRemainderTheorem(ids, offsets);
+  const targetTimestamp = BigInt(newModulo) - BigInt(smallestCrt);
 
   return {
     part1: busWaitTimes[closestBusIdx] * busIds[closestBusIdx],
@@ -79,19 +77,22 @@ const getMinIdx = (arr: number[]): number => {
 const chineseRemainderTheorem = (
   nums: number[],
   remainders: number[]
-): [number, number] => {
+): [BigInt, BigInt] => {
   const newModulo = nums.reduce((a, b) => a * b, 1);
-  const Ni = nums.map((item) => newModulo / item); // number theory and mod arithmetic -> dealing with only whole numbers
+  const Ni = nums.map((item) => Math.floor(newModulo / item)); // number theory and mod arithmetic -> dealing with only whole numbers
   const modularMultiplicativeInv = nums.map((item, i) =>
     modInverse(Ni[i], item)
   );
 
-  let sum = 0;
+  let sum = BigInt(0);
   for (let i = 0; i < nums.length; i++) {
-    sum += remainders[i] * Ni[i] * modularMultiplicativeInv[i];
+    sum +=
+      BigInt(remainders[i]) *
+      BigInt(Ni[i]) *
+      BigInt(modularMultiplicativeInv[i]);
   }
 
-  return [sum % newModulo, newModulo];
+  return [sum % BigInt(newModulo), BigInt(newModulo)];
 };
 
 // from https://rosettacode.org/wiki/Modular_inverse#JavaScript
