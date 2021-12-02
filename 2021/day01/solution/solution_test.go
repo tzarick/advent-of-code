@@ -50,6 +50,7 @@ func TestPart1(t *testing.T) {
 	}
 
 	for _, test := range testCases {
+		t.Logf("Running test case #%d", test.id)
 		got, _ := solution.Run(test.input)
 		if got != test.expect {
 			t.Errorf("Case #%d failed: Got %v, expected %v", test.id, got, test.expect)
@@ -58,7 +59,6 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	t.SkipNow()
 	testCases := []Test{
 		{
 			id: 1,
@@ -77,6 +77,7 @@ func TestPart2(t *testing.T) {
 	}
 
 	for _, test := range testCases {
+		t.Logf("Running test case #%d", test.id)
 		_, got := solution.Run(test.input)
 		if got != test.expect {
 			t.Errorf("Case #%d failed: Got %v, expected %v", test.id, got, test.expect)

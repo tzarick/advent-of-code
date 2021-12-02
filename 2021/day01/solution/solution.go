@@ -20,18 +20,20 @@ func Run(depthChartRaw string) (part1, part2 int) {
 
 	// part 2 - smooth the result with a moving window
 	smoothedIncreaseCount := 0
-	left := 0
-	right := 2 // window size of 3
-	currWindowTotal := sum(depthChart[left : right+1])
-	for i := 0; i < len(depthChart)-3; i++ {
-		nextWindowTotal := currWindowTotal - depthChart[left] + depthChart[right+1]
-		if nextWindowTotal > currWindowTotal {
-			smoothedIncreaseCount++
-		}
+	if len(depthChart) >= 3 {
+		left := 0
+		right := 2 // window size of 3
+		currWindowTotal := sum(depthChart[left : right+1])
+		for i := 0; i < len(depthChart)-3; i++ {
+			nextWindowTotal := currWindowTotal - depthChart[left] + depthChart[right+1]
+			if nextWindowTotal > currWindowTotal {
+				smoothedIncreaseCount++
+			}
 
-		currWindowTotal = nextWindowTotal
-		left++
-		right++
+			currWindowTotal = nextWindowTotal
+			left++
+			right++
+		}
 	}
 
 	return depthIncreaseCount, smoothedIncreaseCount
