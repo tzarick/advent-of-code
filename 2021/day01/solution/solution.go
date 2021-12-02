@@ -23,7 +23,7 @@ func Run(depthChartRaw string) (part1, part2 int) {
 	windowSize := 3
 	if len(depthChart) >= windowSize {
 		left := 0
-		right := 2 // window size of 3
+		right := windowSize - 1
 		currWindowTotal := sum(depthChart[left : right+1])
 		for i := 0; i < len(depthChart)-windowSize; i++ {
 			nextWindowTotal := currWindowTotal - depthChart[left] + depthChart[right+1]
