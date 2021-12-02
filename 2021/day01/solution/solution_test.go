@@ -3,7 +3,7 @@ package solution_test
 import (
 	"testing"
 
-	"github.com/advent-of-code/2021/day01/solution"
+	"github.com/tzarick/advent-of-code/2021/day01/solution"
 )
 
 type Test struct {
