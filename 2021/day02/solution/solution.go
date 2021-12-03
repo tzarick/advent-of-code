@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+const (
+	forward = "forward"
+	up      = "up"
+	down    = "down"
+)
+
 type position struct {
 	x int
 	y int
@@ -44,11 +50,11 @@ func calcPosition(instructs []instruction) (position, error) {
 	var pos position
 	for _, instr := range instructs {
 		switch instr.dir {
-		case "forward":
+		case forward:
 			pos.x += instr.magnitude
-		case "up":
+		case up:
 			pos.y += instr.magnitude
-		case "down":
+		case down:
 			pos.y -= instr.magnitude
 		default:
 			return position{}, fmt.Errorf("unexpected direction found: %s", instr.dir)
@@ -63,11 +69,11 @@ func calcDepth2(instructs []instruction) (int, error) {
 	var depth int
 	for _, instr := range instructs {
 		switch instr.dir {
-		case "forward":
+		case forward:
 			depth += instr.magnitude * aim
-		case "up":
+		case up:
 			aim -= instr.magnitude
-		case "down":
+		case down:
 			aim += instr.magnitude
 		default:
 			return 0, fmt.Errorf("unexpected direction found: %s", instr.dir)
