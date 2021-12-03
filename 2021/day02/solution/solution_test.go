@@ -41,7 +41,6 @@ forward 2`,
 }
 
 func TestPart2(t *testing.T) {
-	t.SkipNow()
 	testCases := []test{
 		{
 			id: 1,

@@ -8,9 +8,8 @@ import (
 )
 
 type position struct {
-	x   int
-	y   int
-	aim int
+	x int
+	y int
 }
 
 type instruction struct {
@@ -29,10 +28,16 @@ func Run(rawDirections string) (part1, part2 int) {
 		log.Fatal(err)
 	}
 
-	depth := -position.y
-	part1 = depth * position.x // depth * horizontal position
+	depth1 := -position.y
+	part1 = depth1 * position.x // depth * horizontal position
 
-	return part1, 0
+	depth2, err := calcDepth2(instructions)
+	if err != nil {
+		log.Fatal(err)
+	}
+	part2 = depth2 * position.x // horizontal position should not have changed from part 1 to part 2
+
+	return part1, part2
 }
 
 func calcPosition(instructs []instruction) (position, error) {
@@ -53,22 +58,23 @@ func calcPosition(instructs []instruction) (position, error) {
 	return pos, nil
 }
 
-func calcPosition2(instructs []instruction) (position, error) {
-	var pos position
+func calcDepth2(instructs []instruction) (int, error) {
+	var aim int
+	var depth int
 	for _, instr := range instructs {
 		switch instr.dir {
 		case "forward":
-			pos.x += instr.magnitude
+			depth += instr.magnitude * aim
 		case "up":
-			pos.y += instr.magnitude
+			aim -= instr.magnitude
 		case "down":
-			pos.y -= instr.magnitude
+			aim += instr.magnitude
 		default:
-			return position{}, fmt.Errorf("unexpected direction found: %s", instr.dir)
+			return 0, fmt.Errorf("unexpected direction found: %s", instr.dir)
 		}
 	}
 
-	return pos, nil
+	return depth, nil
 }
 
 func parseInput(rawString string) ([]instruction, error) {
