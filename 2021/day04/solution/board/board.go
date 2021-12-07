@@ -57,6 +57,7 @@ func (b Board) IsAWinner() bool {
 }
 
 func (b Board) UnmarkedSum() int {
+	// a simple sum of the matrix will suffice here since we zeroed out numbers that we marked
 	result := 0
 	for _, row := range b.referenceGrid {
 		result += sum(row)
