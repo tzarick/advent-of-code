@@ -20,6 +20,7 @@ func (b *Board) Mark(x int, y int) {
 	b.referenceGrid[x][y] = 0
 }
 
+// find coordinates in the bingo matrix of the desired number, if it exists
 func (b Board) GetCoords(num int) (x int, y int) {
 	for i, row := range b.referenceGrid {
 		for j, val := range row {
