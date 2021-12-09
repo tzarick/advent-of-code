@@ -14,7 +14,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	part1, part2 := solution.Run(input)
+	part1 := solution.Run(input, false)
+	part2 := solution.Run(input, true)
 
 	fmt.Printf(`
 		Part 1 Solution: %v

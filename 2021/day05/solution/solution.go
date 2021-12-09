@@ -1,7 +1,6 @@
 package solution
 
 import (
-	"fmt"
 	"math"
 	"regexp"
 	"strconv"
@@ -18,43 +17,71 @@ type vent struct {
 	end   point
 }
 
-func Run(rawList string) (part1, part2 int) {
+func Run(rawList string, includeDiag bool) int {
 	vents := parseInput(rawList)
 	// part 1
 	maxDim := getMaxDim(vents)
 	grid := initGrid(maxDim)
-	println(len(grid), len(grid[0]))
+
 	for _, v := range vents {
 		if !isDiag(v) {
 			xLen := v.end.x - v.start.x
 			yLen := v.end.y - v.start.y
 
-			println("lens", xLen, yLen)
-			println("start", v.start.x, v.start.y)
-			println(v.end.x, v.end.y)
-			println("len", int(math.Abs(float64(xLen))))
-			for i := 0; i < int(math.Abs(float64(xLen))); i++ {
-				if xLen > 0 {
-					grid[v.start.x+i][v.start.y]++
-					fmt.Printf("mark %v, %v\n", v.start.x+i, v.start.y)
-				} else {
-					grid[v.start.x-i][v.start.y]++
-					fmt.Printf("mark %v, %v\n", v.start.x-i, v.start.y)
-				}
+			// handle horizontal lines
+			lineLengthX := int(math.Abs(float64(xLen)))
+			xDir := int(math.Copysign(1, float64(xLen))) // -1 or 1
+			for i := 0; lineLengthX > 0 && i <= lineLengthX; i++ {
+				grid[v.start.x+(i*xDir)][v.start.y]++
 			}
 
-			for i := 0; i < int(math.Abs(float64(yLen))); i++ {
-				if yLen > 0 {
-					grid[v.start.x][v.start.y+i]++
-				} else {
-					grid[v.start.x][v.start.y-i]++
-				}
+			// handle vertical lines
+			lineLengthY := int(math.Abs(float64(yLen)))
+			yDir := int(math.Copysign(1, float64(yLen))) // -1 or 1
+			for i := 0; lineLengthY > 0 && i <= lineLengthY; i++ {
+				grid[v.start.x][v.start.y+(i*yDir)]++
 			}
+		} else {
+			if !includeDiag {
+				continue
+			}
+			// part 2 - handle diagonal lines
+			//
+			// They are all specifically 45 degrees. This means each point is a distance of (1,1) away from each other point
+			// We just have to figure out which direction and how to build it.
+			//
+			// example to help me visualize. This is the base case for all 4 possible cases:
+			//
+			//  - - -
+			//  - x -
+			//  - - -
+			//
+			// (1,1) -> (0,0) up and left
+			// (1,1) -> (0,2) up and right
+			// (1,1) -> (2,2) down and right
+			// (1,1) -> (2,0) down and left
+			//
+			// in each case we can compare x2 to x1 and y2 to y1 to find the respective xDir and yDir in which we should head, by 1
+
+			xDir := int(math.Copysign(1, float64(v.end.x-v.start.x))) // -1 or 1
+			yDir := int(math.Copysign(1, float64(v.end.y-v.start.y))) // -1 or 1
+
+			x := v.start.x
+			y := v.start.y
+			i := 0 // x direction weight
+			j := 0 // y direction weight
+			for (x+i) != v.end.x && (y+j) != v.end.y {
+				grid[x+i][y+j]++
+				i += 1 * xDir
+				j += 1 * yDir
+			}
+
+			grid[x+i][y+j]++ // mark the end point
 		}
 	}
 
 	overlap := findOverlap(grid)
-	return overlap, 0
+	return overlap
 }
 
 func findOverlap(grid [][]int) int {
