@@ -28,8 +28,16 @@ var testCasesPart1 []test = []test{
 	},
 }
 
-func TestPart1(t *testing.T) {
+var testCasesPart2 []test = []test{
+	{
+		id:       1,
+		input:    `3,4,3,1,2`,
+		duration: 256,
+		expect:   26984457539,
+	},
+}
 
+func TestPart1(t *testing.T) {
 	for _, test := range testCasesPart1 {
 		t.Logf("Running test case #%d", test.id)
 		got := solution.Run(test.input, test.duration)
@@ -40,17 +48,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	t.SkipNow()
-	testCases := []test{
-		{
-			id:       1,
-			input:    `3,4,3,1,2`,
-			duration: 256,
-			expect:   26984457539,
-		},
-	}
-
-	for _, test := range testCases {
+	for _, test := range testCasesPart2 {
 		t.Logf("Running test case #%d", test.id)
 		got := solution.Run(test.input, test.duration)
 		if got != test.expect {
@@ -61,15 +59,17 @@ func TestPart2(t *testing.T) {
 
 func BenchmarkTest(b *testing.B) {
 	b.Log("Running benchmark test...")
-	testCase := testCasesPart1[0]
+	testCase := testCasesPart2[0]
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		solution.Run(testCase.input, testCase.duration)
 	}
 
 	// Results:
-	// after part 1, recursion, no memoization:
 	//
-	// BenchmarkTest-4           466556              2428 ns/op
 	//
+	// part1[0] recursion, store fish structs, no memoization-> BenchmarkTest-4           466556              2428 ns/op
+	//
+	// part2[0] ran out of memory after like 30 mins using the same code as above^
+	// part2[0] recursion with reduced space complexity and memoization -> BenchmarkTest-4             7135            150779 ns/op
 }
