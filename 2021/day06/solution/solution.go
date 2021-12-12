@@ -18,34 +18,31 @@ func Run(rawList string, duration int) int {
 	fishies := parseInput(rawList)
 
 	// add all the children to our list of fish
+	totalFish := len(fishies) // start with just the parents
 	for _, fishy := range fishies {
-		children := birthFishChildren(fishy, duration)
-		fishies = append(fishies, children...)
+		totalFish += getDescendantCount(fishy.birthday, fishy.age, duration)
 	}
 
-	totalFish := len(fishies)
 	return totalFish
 }
 
-func birthFishChildren(parent fish, duration int) []fish {
-	firstSpawnDay := parent.birthday + parent.age + 1
+// get descendant count for given parent
+func getDescendantCount(parentBirthday, parentAge, duration int) int {
+	firstSpawnDay := parentBirthday + parentAge + 1
 	numChildren := 0               // base case -> if no children, an empty slice of fish is returned
 	if firstSpawnDay <= duration { // this fish will have at least one child
 		numChildren = 1 + (duration-firstSpawnDay)/spawnCycle
 	}
-	var children []fish
 
+	descendantCount := 0
 	for i := 0; i < numChildren; i++ {
-		spawnDay := firstSpawnDay + (i * spawnCycle)
-		child := fish{
-			birthday: spawnDay,
-			age:      spawnCycle + 1, // always 8 for our purposes
-		}
-		children = append(children, child)
-		children = append(children, birthFishChildren(child, duration)...)
+		childBirthday := firstSpawnDay + (i * spawnCycle)
+		childAge := spawnCycle + 1 // always 8 for our purposes
+
+		descendantCount += 1 + getDescendantCount(childBirthday, childAge, duration)
 	}
 
-	return children
+	return descendantCount
 }
 
 func parseInput(rawString string) []fish {
