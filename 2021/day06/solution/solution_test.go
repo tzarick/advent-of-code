@@ -57,6 +57,16 @@ func TestPart2(t *testing.T) {
 	}
 }
 
+func TestConcurrent(t *testing.T) {
+	for _, test := range testCasesPart1 {
+		t.Logf("Running test case #%d", test.id)
+		got := solution.RunConcurrent(test.input, test.duration)
+		if got != test.expect {
+			t.Errorf("Case #%d failed: Got %v, expected %v", test.id, got, test.expect)
+		}
+	}
+}
+
 func BenchmarkTest(b *testing.B) {
 	b.Log("Running benchmark test...")
 	testCase := testCasesPart2[0]
