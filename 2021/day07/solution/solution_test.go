@@ -23,8 +23,8 @@ var testCasesPart1 []test = []test{
 var testCasesPart2 []test = []test{
 	{
 		id:     1,
-		input:  `3,4,3,1,2`,
-		expect: 26984457539,
+		input:  `16,1,2,0,4,2,7,1,2,14`,
+		expect: 168,
 	},
 }
 
@@ -39,7 +39,6 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	t.SkipNow()
 	for _, test := range testCasesPart2 {
 		t.Logf("Running test case #%d", test.id)
 		_, got := solution.Run(test.input)
