@@ -3,14 +3,45 @@ package solution
 import "strings"
 
 type display struct {
-	signals []string // maybe make this a mp
-	output  []string
+	signals                    []string
+	output                     []string
+	customSegmentToStdSegments map[byte]int // map the letter we get to the std segment (key below)
+}
+
+const (
+	top         = iota
+	topLeft     = iota
+	topRight    = iota
+	mid         = iota
+	bottomLeft  = iota
+	bottomRight = iota
+	bottom      = iota
+)
+
+// state of all 7 segments -> displayed digit
+var stdSegmentComboToDigitMap map[string]int = map[string]int{
+	"1110111": 0,
+	"0010010": 1,
+	"1011101": 2,
+	"1011011": 3,
+	"0111010": 4,
+	"1101011": 5,
+	"1101111": 6,
+	"1010010": 7,
+	"1111111": 8,
+	"1111011": 9,
 }
 
 func Run(rawList string) (part1, part2 int) {
 	displayInputs := parseInput(rawList)
 
-	return getUniqueOutputDigitCount(displayInputs), 0
+	totalOutputVal := 0
+	for i := range displayInputs {
+		customSegmentToStdSegments := decodeSegmentLines(displayInputs[i])
+		totalOutputVal += decodeOutput(displayInputs[i].output, customSegmentToStdSegments)
+	}
+
+	return getUniqueOutputDigitCount(displayInputs), totalOutputVal
 }
 
 func getUniqueOutputDigitCount(displays []display) int {
@@ -24,6 +55,18 @@ func getUniqueOutputDigitCount(displays []display) int {
 	}
 
 	return uniqueCount
+}
+
+func decodeSegmentLines(d display) map[byte]int {
+	// fill d.customSegmentToStdSegments
+	// for _, digit := range d.output {
+
+	// }
+	return map[byte]int{}
+}
+
+func decodeOutput(sequence []string, key map[byte]int) int {
+	return 0
 }
 
 func parseInput(list string) []display {
@@ -43,3 +86,24 @@ func parseInput(list string) []display {
 
 	return cleaned
 }
+
+// rand comb -> number
+// rand comb -> decoded mapping -> segment key -> std map -> number
+
+// segment key
+//
+// top
+// t  t
+// o  o
+// p  p
+// l  r
+// t  t
+// mid
+// b  b
+// o  o
+// t  t
+// l  r
+// t  t
+// bottom
+
+// top = 0, toplt = 1, toprt = 2, mid = 3, botlt = 4, botrt = 5, bottom = 6
