@@ -1,6 +1,9 @@
 package solution
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 type display struct {
 	signals                    []string
@@ -66,6 +69,20 @@ func decodeSegmentLines(d display) map[byte]int {
 }
 
 func decodeOutput(sequence []string, key map[byte]int) int {
+	var decodedSeq []byte
+	for _, seq := range sequence {
+		num := decodeNum(seq, key)
+		numString := strconv.Itoa(num)
+		decodedSeq = append(decodedSeq, []byte(numString)...)
+	}
+
+	decodedNum, _ := strconv.Atoi(string(decodedSeq))
+
+	return decodedNum
+}
+
+// decode a single input of a single segment sequence and return the number 0-9 that corresponds to it based on the custom mapping
+func decodeNum(input string, key map[byte]int) int {
 	return 0
 }
 
