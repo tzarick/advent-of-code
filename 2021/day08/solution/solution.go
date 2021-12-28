@@ -96,7 +96,7 @@ func decodeOutput(sequence []string, seqToNumMap map[string]int) (totalOutput, e
 		}
 
 		numString := strconv.Itoa(num)
-		decodedSeq = append(decodedSeq, []byte(numString)...)
+		decodedSeq = append(decodedSeq, numString[0]) // numString[0] really just converts our single char string into a byte
 	}
 
 	decodedNum, err := strconv.Atoi(string(decodedSeq))
