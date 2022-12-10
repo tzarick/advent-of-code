@@ -28,6 +28,31 @@ const testCases = [
     input: `zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw`,
     expected: 11,
   },
+  {
+    part: 2,
+    input: `mjqjpqmgbljsphdztnvjfqwrcgsmlb`,
+    expected: 19,
+  },
+  {
+    part: 2,
+    input: `bvwbjplbgvbhsrlpgdmjqwftvncz`,
+    expected: 23,
+  },
+  {
+    part: 2,
+    input: `nppdvjthqldpwncqszvftbrmjlhg`,
+    expected: 23,
+  },
+  {
+    part: 2,
+    input: `nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg`,
+    expected: 29,
+  },
+  {
+    part: 2,
+    input: `zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw`,
+    expected: 26,
+  },
 ];
 
 describe('Solution Test Cases - Day 13', () => {
