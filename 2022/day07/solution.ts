@@ -9,12 +9,15 @@ const SPACE_NEEDED_FOR_UPDATE = 30000000;
 
 export const solution = (input: string): result => {
   const filesystem = populateFilesystemInfo(input);
-  calculateMemoryTotals(filesystem['/']);
+  const totalMemUsage = calculateMemoryTotals(filesystem['/']);
   const totalSmallDirMemUsage = getSmallDirMemUsage(filesystem['/']);
+
+  const unusedSpace = TOTAL_DISK_SPACE - totalMemUsage;
+  const bestDirSizeToDelete = findBestDirSizeToDelete(filesystem['/'], unusedSpace, totalMemUsage);
 
   return {
     part1: totalSmallDirMemUsage,
-    part2: 0
+    part2: bestDirSizeToDelete
   };
 };
 
@@ -92,6 +95,19 @@ const getSmallDirMemUsage = (filesystemLevel: Record<string, any>): number => {
   return smallDirMemUsage;
 };
 
-const findBestDirSizeToDelete = (filesystemLevel: Record<string, any>): number => {
+const findBestDirSizeToDelete = (filesystemLevel: Record<string, any>, unusedSpace: number, currentBest: number): number => {
+  let bestSizeToDelete = currentBest;
 
+  if (unusedSpace + filesystemLevel.totalMemUsage >= SPACE_NEEDED_FOR_UPDATE && filesystemLevel.totalMemUsage < currentBest) {
+    bestSizeToDelete = filesystemLevel.totalMemUsage;
+  }
+
+  for (const [key, value] of Object.entries(filesystemLevel)) {
+    if (typeof (value) === 'object') {
+      // dir
+      bestSizeToDelete = findBestDirSizeToDelete(filesystemLevel[key], unusedSpace, bestSizeToDelete);
+    }
+  }
+
+  return bestSizeToDelete;
 };
